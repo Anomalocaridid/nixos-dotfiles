@@ -1,6 +1,6 @@
-{ disks ? [ "/dev/nvme0n1" ], ... }: {
+{ disks ? [ "/dev/vda" ], memory ? "8G" ... }: {
   disk = {
-    nvme0n1 = {
+    vda = {
       type = "disk";
       device = builtins.elemAt disks 0;
       content = {
@@ -39,27 +39,27 @@
                   "/root" = {
                     mountpoint = "/";
                     mountOptions = [ "compress=zstd" "noatime" ];
-                    postCreateHook = "btrfs subvolume snapshot -r /root /root-blank"
+                    postCreateHook = "btrfs subvolume snapshot -r /mnt/ /mnt/root-blank";
                   };
                   # Mountpoints inferred from subvolume name
                   "/home" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/nix" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/persist" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/log" = {
-                    mountOptions = [ "compress=zstd" "noatime" ];
+                    mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/swap" = {
                     mountOptions = [ "noatime" ];
                     postCreateHook = ''
-                      btrfs filesystem mkswapfile --size 32G /swap/swapfile
-                      swapon /swap/swapfile
-                    ''
+                      btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
+                      swapon /mnt/swap/swapfile
+                    '';
                   };
                 };
               };
