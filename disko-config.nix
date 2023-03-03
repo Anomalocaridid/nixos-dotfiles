@@ -1,4 +1,5 @@
-{ disks ? [ "/dev/vda" ], memory ? "8G" ... }: {
+# { disks ? [ "/dev/vda" ], memory ? "8G", ... }: {
+{ disks ? [ "/dev/vda" ], ... }: {
   disk = {
     vda = {
       type = "disk";
@@ -39,7 +40,7 @@
                   "/root" = {
                     mountpoint = "/";
                     mountOptions = [ "compress=zstd" "noatime" ];
-                    postCreateHook = "btrfs subvolume snapshot -r /mnt/ /mnt/root-blank";
+                    #postCreateHook = "btrfs subvolume snapshot -r /mnt/ /mnt/root-blank";
                   };
                   # Mountpoints inferred from subvolume name
                   "/home" = {
@@ -56,10 +57,10 @@
                   };
                   "/swap" = {
                     mountOptions = [ "noatime" ];
-                    postCreateHook = ''
-                      btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
-                      swapon /mnt/swap/swapfile
-                    '';
+                    # postCreateHook = ''
+                    #   btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
+                    #   swapon /mnt/swap/swapfile
+                    # '';
                   };
                 };
               };
