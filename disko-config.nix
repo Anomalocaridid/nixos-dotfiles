@@ -1,8 +1,8 @@
-{ disks ? [ "/dev/vda" ], installMode ? false, ... }: {
+{ lib, disk ? "/dev/vda", keyFile ? null, ... }: {
   disk = {
     vda = {
       type = "disk";
-      device = builtins.elemAt disks 0;
+      device = disk;
       content = {
         type = "table";
         format = "gpt";
@@ -30,7 +30,7 @@
             content = {
               type = "luks";
               name = "crypted";
-              #keyFile = "/tmp/secret.key";
+              keyFile = keyFile; # Only use keyFile to set password in initial installation
               content = {
                 type = "btrfs";
                 extraArgs = [ "-f" ]; # Override existing partition
@@ -62,10 +62,7 @@
                     # '';
                   };
                 };
-              # Only use keyFile to set password in initial installation
-              } ++ lib.attrsets.optionalAttrs installMode {
-                keyFile = "/tmp/passphrase.txt";
-              };
+              }
             };
           }
         ];
