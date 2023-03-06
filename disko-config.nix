@@ -52,6 +52,7 @@
                     mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/log" = {
+                    mountpoint = "/var/log"
                     mountOptions = [ "compress=zstd" "noatime" "nodiratime" "discard" ];
                   };
                   "/swap" = {
