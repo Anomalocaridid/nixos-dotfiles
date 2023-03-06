@@ -1,5 +1,4 @@
-# { disks ? [ "/dev/vda" ], memory ? "8G", ... }: {
-{ disks ? [ "/dev/vda" ], ... }: {
+{ disks ? [ "/dev/vda" ], installMode ? false, ... }: {
   disk = {
     vda = {
       type = "disk";
@@ -63,7 +62,8 @@
                     # '';
                   };
                 };
-              };
+              # Only use keyFile to set password in initial installation
+              } ++ lib.attrsets.optionalAttrs installMode { keyFile = "/tmp/passphrase.txt"};
             };
           }
         ];
