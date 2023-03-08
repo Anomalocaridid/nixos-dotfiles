@@ -1,4 +1,4 @@
-{ lib, disk ? "/dev/vda", keyFile ? null, ... }: {
+{ lib, disk ? "/dev/vda", memory ? "8G", keyFile ? null, ... }: {
   disk = {
     vda = {
       type = "disk";
@@ -61,10 +61,12 @@
                   };
                   "/swap" = {
                     mountOptions = [ "noatime" ];
-                    # postCreateHook = ''
-                    #   btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
-                    #   swapon /mnt/swap/swapfile
-                    # '';
+                    postCreateHook = ''
+                      mount -t btrfs /dev/mapper/crypted /mnt
+                      btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
+                      swapon /mnt/swap/swapfile
+                      umount /mnt
+                    '';
                   };
                 };
               };
