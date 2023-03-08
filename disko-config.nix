@@ -39,7 +39,11 @@
                   "/root" = {
                     mountpoint = "/";
                     mountOptions = [ "compress=zstd" "noatime" ];
-                    #postCreateHook = "btrfs subvolume snapshot -r /mnt/ /mnt/root-blank";
+                    postCreateHook = ''
+                      mount -t btrfs /dev/mapper/enc /mnt
+                      btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
+                      umount /mnt
+                    '';
                   };
                   # Mountpoints inferred from subvolume name
                   "/home" = {
