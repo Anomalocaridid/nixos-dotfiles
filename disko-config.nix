@@ -40,7 +40,7 @@
                     mountpoint = "/";
                     mountOptions = [ "compress=zstd" "noatime" ];
                     postCreateHook = ''
-                      mount -t btrfs /dev/mapper/enc /mnt
+                      mount -t btrfs /dev/mapper/crypted /mnt
                       btrfs subvolume snapshot -r /mnt/root /mnt/root-blank
                       umount /mnt
                     '';
