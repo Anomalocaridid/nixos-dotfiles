@@ -61,10 +61,10 @@
                   };
                   "/swap" = {
                     mountOptions = [ "noatime" ];
+                    # Don't activate swap here or it makes disk busy and unable to be unmounted
                     postCreateHook = ''
                       mount -t btrfs /dev/mapper/crypted /mnt
                       btrfs filesystem mkswapfile --size ${memory} /mnt/swap/swapfile
-                      swapon /mnt/swap/swapfile
                       umount /mnt
                     '';
                   };
